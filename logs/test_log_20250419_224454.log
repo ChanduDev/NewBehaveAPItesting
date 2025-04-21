@@ -1,0 +1,21 @@
+2025-04-19 22:44:55,215 | INFO | >>> Load Env Config
+2025-04-19 22:44:55,217 | INFO | >>> BeforeAll
+2025-04-19 22:44:55,217 | INFO | Allure reports will be generated at reports/allure-results/20250419224455
+2025-04-19 22:44:55,218 | INFO | Evaluating scenario: Create Cart
+2025-04-19 22:44:55,218 | INFO | Scenario filter active: include = []
+2025-04-19 22:44:55,218 | INFO | Scenario 'Create Cart' passed all skip checks and will execute.
+2025-04-19 22:44:55,219 | INFO | Using API config: cart
+2025-04-19 22:45:25,611 | WARNING | Mongo fetch failed. Falling back to JSON. Reason: localhost:27017: [WinError 10061] No connection could be made because the target machine actively refused it (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms), Timeout: 30s, Topology Description: <TopologyDescription id: 6803da0fcbbb691d1d7580e4, topology_type: Unknown, servers: [<ServerDescription ('localhost', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('localhost:27017: [WinError 10061] No connection could be made because the target machine actively refused it (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>]>
+2025-04-19 22:45:25,614 | ERROR | Scenario 'Create Cart' failed.
+2025-04-19 22:45:25,614 | INFO | Evaluating scenario: Create Order using Cart ID
+2025-04-19 22:45:25,615 | INFO | Scenario filter active: include = []
+2025-04-19 22:45:25,615 | INFO | Scenario 'Create Order using Cart ID' passed all skip checks and will execute.
+2025-04-19 22:45:25,616 | INFO | Using API config: cart
+2025-04-19 22:45:56,045 | WARNING | Mongo fetch failed. Falling back to JSON. Reason: localhost:27017: [WinError 10061] No connection could be made because the target machine actively refused it (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms), Timeout: 30s, Topology Description: <TopologyDescription id: 6803da2dcbbb691d1d7580e5, topology_type: Unknown, servers: [<ServerDescription ('localhost', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('localhost:27017: [WinError 10061] No connection could be made because the target machine actively refused it (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>]>
+2025-04-19 22:45:56,046 | ERROR | Scenario 'Create Order using Cart ID' failed.
+2025-04-19 22:45:56,046 | INFO | Evaluating scenario: Pay for Order using Order ID
+2025-04-19 22:45:56,046 | INFO | Scenario filter active: include = []
+2025-04-19 22:45:56,047 | INFO | Scenario 'Pay for Order using Order ID' passed all skip checks and will execute.
+2025-04-19 22:45:56,048 | INFO | Using API config: cart
+2025-04-19 22:46:26,395 | WARNING | Mongo fetch failed. Falling back to JSON. Reason: localhost:27017: [WinError 10061] No connection could be made because the target machine actively refused it (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms), Timeout: 30s, Topology Description: <TopologyDescription id: 6803da4ccbbb691d1d7580e6, topology_type: Unknown, servers: [<ServerDescription ('localhost', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('localhost:27017: [WinError 10061] No connection could be made because the target machine actively refused it (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>]>
+2025-04-19 22:46:26,396 | ERROR | Scenario 'Pay for Order using Order ID' failed.

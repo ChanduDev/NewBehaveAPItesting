@@ -1,0 +1,41 @@
+retry_settings:
+  retry_attempts: 3
+  retry_multiplier: 1
+  retry_min: 4
+  retry_max: 10
+
+dev:
+  cart:
+    base_url: "http://127.0.0.1:8000"
+    token: "dev_token_api1"
+  api2:
+    base_url: "https://dev.api2.example.com"
+    token: "dev_token_api2"
+  mongodb:
+    mongo_uri: mongodb://localhost:27017
+    db_name: apitest
+    collection: testdata
+
+qa:
+  cart:
+    base_url: "https://qa.api1.example.com"
+    token: "qa_token_api1"
+  api2:
+    base_url: "https://qa.api2.example.com"
+    token: "qa_token_api2"
+
+canary:
+  cart:
+    base_url: "https://canary.api1.example.com"
+    token: "canary_token_api1"
+  api2:
+    base_url: "https://canary.api2.example.com"
+    token: "canary_token_api2"
+
+prod:
+  cart:
+    base_url: "https://prod.api1.example.com"
+    token: "prod_token_api1"
+  api2:
+    base_url: "https://prod.api2.example.com"
+    token: "prod_token_api2"

@@ -1,0 +1,122 @@
+@regression
+Feature: Chained workflow from Cart to Order to Payment # features/test_order_payment_chain.feature:2
+
+  Background:   # features/test_order_payment_chain.feature:4
+
+  Scenario: Create Cart                                            # features/test_order_payment_chain.feature:9
+    Given I use the "cart" env config                              # features/steps/order_steps.py:8
+    And I load test data from "workflow_test_data.csv"             # features/steps/order_steps.py:16
+    And I fetch MongoDB data from query                            # features/steps/order_steps.py:20
+    When I select row 0 to load the API contract details           # features/steps/order_steps.py:24
+      Traceback (most recent call last):
+        File "C:\Users\CHANDU\AppData\Local\Programs\Python\Python313\Lib\site-packages\behave\model.py", line 1329, in run
+          match.run(runner.context)
+          ~~~~~~~~~^^^^^^^^^^^^^^^^
+        File "C:\Users\CHANDU\AppData\Local\Programs\Python\Python313\Lib\site-packages\behave\matchers.py", line 98, in run
+          self.func(context, *args, **kwargs)
+          ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+        File "features\steps\order_steps.py", line 28, in step_select_row_data
+          context.current_data[key] = json.loads(context.current_data.get(key, "{}"))
+                                      ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        File "C:\Users\CHANDU\AppData\Local\Programs\Python\Python313\Lib\json\__init__.py", line 346, in loads
+          return _default_decoder.decode(s)
+                 ~~~~~~~~~~~~~~~~~~~~~~~^^^
+        File "C:\Users\CHANDU\AppData\Local\Programs\Python\Python313\Lib\json\decoder.py", line 345, in decode
+          obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+                     ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+        File "C:\Users\CHANDU\AppData\Local\Programs\Python\Python313\Lib\json\decoder.py", line 361, in raw_decode
+          obj, end = self.scan_once(s, idx)
+                     ~~~~~~~~~~~~~~^^^^^^^^
+      json.decoder.JSONDecodeError: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)
+      
+      Captured logging:
+      INFO:bdd_framework_logger:Using API config: cart
+      WARNING:bdd_framework_logger:Mongo fetch failed. Falling back to JSON. Reason: localhost:27017: [WinError 10061] No connection could be made because the target machine actively refused it (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms), Timeout: 20.0s, Topology Description: <TopologyDescription id: 6803f5ff368a462f036f7adc, topology_type: Unknown, servers: [<ServerDescription ('localhost', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('localhost:27017: [WinError 10061] No connection could be made because the target machine actively refused it (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>]>
+
+    And I override values using mappings                           # None
+      | headers.Authorization | access_token |
+    And I send a POST request to "/cart" with API contract details # None
+    Then the response status code should be 201                    # None
+    And I save response values using mappings                      # None
+      | body.cart.id | cartId |
+
+  Scenario: Create Order using Cart ID                              # features/test_order_payment_chain.feature:18
+    Given I use the "cart" env config                               # features/steps/order_steps.py:8
+    And I load test data from "workflow_test_data.csv"              # features/steps/order_steps.py:16
+    And I fetch MongoDB data from query                             # features/steps/order_steps.py:20
+    Given I use the "cart" env config                               # features/steps/order_steps.py:8
+    When I select row 1 to load the API contract details            # features/steps/order_steps.py:24
+      Traceback (most recent call last):
+        File "C:\Users\CHANDU\AppData\Local\Programs\Python\Python313\Lib\site-packages\behave\model.py", line 1329, in run
+          match.run(runner.context)
+          ~~~~~~~~~^^^^^^^^^^^^^^^^
+        File "C:\Users\CHANDU\AppData\Local\Programs\Python\Python313\Lib\site-packages\behave\matchers.py", line 98, in run
+          self.func(context, *args, **kwargs)
+          ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+        File "features\steps\order_steps.py", line 28, in step_select_row_data
+          context.current_data[key] = json.loads(context.current_data.get(key, "{}"))
+                                      ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        File "C:\Users\CHANDU\AppData\Local\Programs\Python\Python313\Lib\json\__init__.py", line 346, in loads
+          return _default_decoder.decode(s)
+                 ~~~~~~~~~~~~~~~~~~~~~~~^^^
+        File "C:\Users\CHANDU\AppData\Local\Programs\Python\Python313\Lib\json\decoder.py", line 345, in decode
+          obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+                     ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+        File "C:\Users\CHANDU\AppData\Local\Programs\Python\Python313\Lib\json\decoder.py", line 361, in raw_decode
+          obj, end = self.scan_once(s, idx)
+                     ~~~~~~~~~~~~~~^^^^^^^^
+      json.decoder.JSONDecodeError: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)
+      
+      Captured logging:
+      INFO:bdd_framework_logger:Using API config: cart
+      WARNING:bdd_framework_logger:Mongo fetch failed. Falling back to JSON. Reason: localhost:27017: [WinError 10061] No connection could be made because the target machine actively refused it (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms), Timeout: 20.0s, Topology Description: <TopologyDescription id: 6803f613368a462f036f7add, topology_type: Unknown, servers: [<ServerDescription ('localhost', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('localhost:27017: [WinError 10061] No connection could be made because the target machine actively refused it (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>]>
+      INFO:bdd_framework_logger:Using API config: cart
+
+    And I override values using mappings                            # None
+      | headers.Authorization | access_token |
+      | body.order.cart_id    | cartId       |
+    And I send a POST request to "/order" with API contract details # None
+    Then the response status code should be 201                     # None
+    And I save response values using mappings                       # None
+      | body.order.id | orderId |
+
+  Scenario: Pay for Order using Order ID                                    # features/test_order_payment_chain.feature:29
+    Given I use the "cart" env config                                       # features/steps/order_steps.py:8
+    And I load test data from "workflow_test_data.csv"                      # features/steps/order_steps.py:16
+    And I fetch MongoDB data from query                                     # features/steps/order_steps.py:20
+    Given I use the "cart" env config                                       # features/steps/order_steps.py:8
+    When I select row 2 to load the API contract details                    # features/steps/order_steps.py:24
+      Traceback (most recent call last):
+        File "C:\Users\CHANDU\AppData\Local\Programs\Python\Python313\Lib\site-packages\behave\model.py", line 1329, in run
+          match.run(runner.context)
+          ~~~~~~~~~^^^^^^^^^^^^^^^^
+        File "C:\Users\CHANDU\AppData\Local\Programs\Python\Python313\Lib\site-packages\behave\matchers.py", line 98, in run
+          self.func(context, *args, **kwargs)
+          ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+        File "features\steps\order_steps.py", line 28, in step_select_row_data
+          context.current_data[key] = json.loads(context.current_data.get(key, "{}"))
+                                      ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        File "C:\Users\CHANDU\AppData\Local\Programs\Python\Python313\Lib\json\__init__.py", line 346, in loads
+          return _default_decoder.decode(s)
+                 ~~~~~~~~~~~~~~~~~~~~~~~^^^
+        File "C:\Users\CHANDU\AppData\Local\Programs\Python\Python313\Lib\json\decoder.py", line 345, in decode
+          obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+                     ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+        File "C:\Users\CHANDU\AppData\Local\Programs\Python\Python313\Lib\json\decoder.py", line 361, in raw_decode
+          obj, end = self.scan_once(s, idx)
+                     ~~~~~~~~~~~~~~^^^^^^^^
+      json.decoder.JSONDecodeError: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)
+      
+      Captured logging:
+      INFO:bdd_framework_logger:Using API config: cart
+      WARNING:bdd_framework_logger:Mongo fetch failed. Falling back to JSON. Reason: localhost:27017: [WinError 10061] No connection could be made because the target machine actively refused it (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms), Timeout: 20.0s, Topology Description: <TopologyDescription id: 6803f627368a462f036f7ade, topology_type: Unknown, servers: [<ServerDescription ('localhost', 27017) server_type: Unknown, rtt: None, error=AutoReconnect('localhost:27017: [WinError 10061] No connection could be made because the target machine actively refused it (configured timeouts: socketTimeoutMS: 20000.0ms, connectTimeoutMS: 20000.0ms)')>]>
+      INFO:bdd_framework_logger:Using API config: cart
+
+    And I override values using mappings                                    # None
+      | headers.Authorization | access_token |
+      | body.payment.order_id | orderId      |
+    And I send a POST request to "/pay/{orderId}" with API contract details # None
+    Then the response status code should be 200                             # None
+    And I validate response values using mappings                           # None
+      | body.payment.status | success |
+

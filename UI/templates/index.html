@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BDD Test Runner UI</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+  <div class="container py-5">
+    <h1 class="mb-4 text-primary">📘 BDD API Test Runner</h1>
+
+    <form method="post" action="/run" class="row g-3 mb-4" enctype="multipart/form-data">
+      <div class="col-md-4">
+        <label for="env" class="form-label">Environment</label>
+        <select class="form-select" id="env" name="env">
+          {% for option in ['dev', 'qa', 'canary', 'prod'] %}
+            <option value="{{ option }}" {% if config.default_env == option %}selected{% endif %}>{{ option }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="col-md-4">
+        <label class="form-label">Tags (select any)</label><br>
+        {% for tag in tags %}
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" name="tags" value="{{ tag }}" id="tag_{{ loop.index }}">
+            <label class="form-check-label" for="tag_{{ loop.index }}">{{ tag }}</label>
+          </div>
+        {% endfor %}
+      </div>
+
+      {% if config.show_feature_selector %}
+      <div class="col-md-4">
+  <label for="mode" class="form-label">Execution Mode</label>
+  <select class="form-select" id="mode" name="mode">
+    <option value="parallel" selected>All Features (Parallel)</option>
+    <option value="single">Single Feature</option>
+    <option value="multiple">Multiple Features</option>
+  </select>
+</div>
+
+<div class="col-md-12">
+  <label for="features" class="form-label">Select Feature File(s)</label>
+  <select class="form-select" id="features" name="features" multiple>
+    {% for file in features %}
+      <option value="{{ file }}">{{ file }}</option>
+    {% endfor %}
+  </select>
+</div>
+      {% endif %}
+
+      <div class="col-12">
+        <button type="submit" class="btn btn-success">▶ Run Tests</button>
+      </div>
+    </form>
+
+    <div id="test-status" class="alert d-none" role="alert"></div>
+
+    <div class="d-flex gap-3 mb-4">
+      <a class="btn btn-outline-primary" href="/report" target="_blank">📊 View Allure Report</a>
+      <a class="btn btn-outline-dark" href="/logs" target="_blank">🪵 View Latest Log</a>
+      <a class="btn btn-outline-info" href="/download-report">📦 Download Report</a>
+    </div>
+
+    <div class="card">
+      <div class="card-header bg-secondary text-white">📜 Execution History</div>
+      <div class="card-body p-0">
+        <table class="table table-striped mb-0">
+          <thead class="table-light">
+            <tr>
+              <th scope="col">Time</th>
+              <th scope="col">Env</th>
+              <th scope="col">Feature</th>
+              <th scope="col">Tags</th>
+              <th scope="col">Result</th>
+              <th scope="col">Duration</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in history %}
+            <tr>
+              <td>{{ item.timestamp }}</td>
+              <td>{{ item.env }}</td>
+              <td>{{ item.feature }}</td>
+              <td>{{ item.tags }}</td>
+              <td>{% if item.failed > 0 %}<span class="text-danger">❌ {{ item.failed }} failed</span>{% else %}<span class="text-success">✅ Passed</span>{% endif %}</td>
+              <td>{{ item.time }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const form = document.querySelector("form");
+    const statusBox = document.getElementById("test-status");
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      statusBox.classList.remove("d-none", "alert-success", "alert-danger");
+      statusBox.classList.add("alert", "alert-info");
+      statusBox.textContent = "🚀 Starting test run...";
+
+      const formData = new FormData(form);
+      fetch("/run", { method: "POST", body: formData });
+
+      const events = new EventSource("/stream-status");
+      events.onmessage = function (event) {
+        const msg = JSON.parse(event.data);
+        statusBox.textContent = msg.step;
+        if (msg.status === "done") {
+          statusBox.classList.remove("alert-info");
+          statusBox.classList.add(msg.failed > 0 ? "alert-danger" : "alert-success");
+          events.close();
+        }
+      };
+    });
+  </script>
+</body>
+</html>

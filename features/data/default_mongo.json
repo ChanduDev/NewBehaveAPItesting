@@ -1,0 +1,17 @@
+{
+  "access_token": "fallback-access-token",
+  "user_id": "user123",
+  "user_details": {
+    "name": "Test User",
+    "email": "testuser@example.com",
+    "address": {
+      "line1": "123 Test Street",
+      "city": "Testville",
+      "zipcode": "123456"
+    }
+  },
+  "cart_defaults": {
+    "items": ["item1", "item2"],
+    "currency": "INR"
+  }
+}

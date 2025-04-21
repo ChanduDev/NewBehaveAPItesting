@@ -1,0 +1,4 @@
+headers,query_parameters,body
+"{"Authorization": "Bearer temp-token"}","","{"cart": {"items": ["item1", "item2"]}}"
+"{"Authorization": "Bearer temp-token"}","","{"order": {"cart_id": "to-be-overridden", "amount": 199.0}}"
+"{"Authorization": "Bearer temp-token"}","","{"payment": {"order_id": "to-be-overridden", "mode": "card"}}"
